@@ -1,0 +1,35 @@
+<!-- Taking the base html template and attaching the index template-->
+{% extends "base.html" %}
+{% block title %} Home {% endblock title %}
+{% block content %}
+<h3 class="my-5">Welcome to your Task List</h3>
+<!-- hx-post specifies the URL for the form submission. hx-target indicates the element to be updated with the POST response -->
+<form hx-post="{% url 'create_todo' %}" hx-target="#todoList" class="mx-auto">
+  {% csrf_token %} <!-- Security purposes -->
+  <div class="mb-3 row align-items-center">
+    <label for="todoText" class="col-auto col-form-label">Enter your task</label>
+    <div class="col-6">
+      <input type="text" name="title" class="form-control" id="todoText" required>
+    </div>  
+    <div class="col-auto">
+      <button class="btn btn-success">Add</button>
+    </div>
+  </div>
+</form>
+
+<div id="todoList">
+  {% include "todo-list.html" %}
+</div>
+
+{% endblock %}
+
+{% block js_script %}
+{% comment %} 
+  This block defines a JavaScript script that adds a CSRF token to the headers of htmx requests. It ensures that the CSRF protection is applied when making htmx requests
+{% endcomment %}
+<script>
+  document.body.addEventListener('htmx:configRequest', (event) => {
+    event.detail.headers['X-CRSFToken'] = '{{ csrf_token }}';
+  })
+</script>
+{% endblock %}

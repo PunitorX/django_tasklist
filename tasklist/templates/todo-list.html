@@ -1,0 +1,26 @@
+<!-- Checks if the todos variables exist. Conditional rendering to determine if theres a list of task or not -->
+{% if todos %}
+
+<div class="card" style="width: 18rem;">
+  <ul class="list-group list-group-flush">
+    {% for todo in todos %}
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+      <div class="{% if todo.completed %} text-success text-decoration-line-through {% endif %}">
+        {{ todo.title}}
+      </div>
+      <div>
+        <span class="action badge rounded-pill text-bg-warning" hx-get="{% url 'mark_todo' todo.pk %}"
+        hx-target="#todoList" style="cursor: pointer;">Check</span>
+        <span class="action badge rouneded-pill text-bg-danger" hx-get="{% url 'delete_todo' todo.pk %}" 
+        hx-target="#todoList" style="cursor: pointer;">Delete</span>
+      </div>
+    </li>
+    {% endfor %}
+  </ul>
+</div>
+
+{% else %}
+
+<h5>You have no task</h5>
+
+{% endif %}
